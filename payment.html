@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Payment-EduConsultancy</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <link rel="icon" href="mainasset/logo.png" type="image/png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600&family=Inter:wght@600&family=Lobster+Two:wght@700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="lib/animate/animate.min.css" rel="stylesheet">
+    <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+
+    <style>
+        /* Add styles for payment page */
+        
+        body {
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            margin: 0;
+            background-color: #f9f9f9;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 400px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            background-color: #ffffff;
+            margin-top: 50px;
+        }
+        
+        .form-container {
+            background-color: #e2ded7;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        
+        .d-none {
+            display: none;
+        }
+        
+        .virtual-card {
+            background: #ececec;
+            padding: 15px;
+            border-radius: 5px;
+        }
+        
+        .card-logo img {
+            width: 50px;
+        }
+        
+        .text-danger {
+            color: red;
+            font-size: 12px;
+        }
+        
+        .btn-primary {
+            background: #007bff;
+            border: none;
+            padding: 10px;
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="form-container">
+            <h3 class="text-center">Payment Form</h3>
+            <form id="payment-form">
+                <div class="mb-3">
+                    <label for="payment-mode" class="form-label">Select Payment Mode</label>
+                    <select id="payment-mode" class="form-control">
+                        <option value="">Select</option>
+                        <option value="upi-id">UPI ID</option>
+                        <option value="upi-qr">UPI QR Code</option>
+                        <option value="card">Credit/Debit Card</option>
+                    </select>
+                    <small class="text-danger d-none" id="paymentModeError">Please select a payment mode.</small>
+                </div>
+
+                <!-- UPI ID Section -->
+                <div id="upi-id-container" class="d-none">
+                    <label for="upi-id" class="form-label">Enter UPI ID</label>
+                    <input type="text" id="upi-id" class="form-control" placeholder="example@upi" />
+                    <small class="text-danger d-none" id="upiIdError">Enter a valid UPI ID (e.g., example@upi).</small><br>
+                    <button type="button" class="btn btn-secondary" id="verify-upi-btn">Verify UPI ID</button>
+                    <small id="verification-status"></small>
+                </div>
+
+                <!-- UPI QR Code -->
+                <div id="upi-qr-container" class="d-none text-center">
+                    <p>Scan the QR Code to Pay</p>
+                    <img src="img/upi.jpg" alt="UPI QR Code" class="img-fluid" />
+                    <div class="mb-3">
+                        <label for="transaction-image" class="form-label">Upload Transaction ID Image (PDF, JPG, PNG)</label>
+                        <input type="file" id="transaction-image" class="form-control" accept=".pdf, .jpg, .jpeg, .png" />
+                        <small class="text-danger d-none" id="fileError">Please upload a valid file (PDF, JPG, PNG).</small>
+                    </div>
+                </div>
+
+                <!-- Credit/Debit Card -->
+                <div id="card-container" class="d-none">
+                    <div class="virtual-card mb-3">
+                        <div id="card-number-preview" class="card-number">XXXX XXXX XXXX XXXX</div>
+                        <div id="card-holder-preview" class="card-holder mt-3">Cardholder Name</div>
+                        <div id="expiry-date-preview" class="expiry-date">MM/YY</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="card-number" class="form-label">Card Number</label>
+                        <input type="text" id="card-number" class="form-control" maxlength="16" placeholder="1234 5678 9012 3456" />
+                        <small class="text-danger d-none" id="cardNumberError">Enter a valid card number.</small>
+                    </div>
+                    <div class="mb-3">
+                        <label for="card-holder" class="form-label">Cardholder Name</label>
+                        <input type="text" id="card-holder" class="form-control" placeholder="Account Holder name" />
+                        <small class="text-danger d-none" id="cardHolderError">Enter a valid name.</small>
+                    </div>
+                    <div class="mb-3">
+                        <label for="expiry-date" class="form-label">Expiry Date</label>
+                        <input type="text" id="expiry-date" class="form-control" maxlength="5" placeholder="MM/YY" />
+                        <small class="text-danger d-none" id="expiryDateError">Enter a valid expiry date.</small>
+                    </div>
+                </div>
+
+                <!-- Amount Field -->
+                <div class="mb-3">
+                    <label for="amount" class="form-label">Enter Amount</label>
+                    <input type="text" id="amount" class="form-control" placeholder="Enter Amount" />
+                    <small class="text-danger d-none" id="amountError">Please enter a valid amount.</small>
+                </div>
+
+                <!-- Payment Gateway Icons -->
+                <div class="payment-icons text-center mt-4">
+                    <img src="img/visa.png" alt="Visa" />
+                    <img src="img/mastercard.png" alt="Mastercard" />
+                    <img src="img/upi.png" alt="UPI" />
+                    <img src="img/rupay.png" alt="Rupay" />
+                </div>
+
+                <button type="submit" id="pay-now-btn" class="btn btn-primary mt-3" disabled>Pay Now</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/payment.js"></script>
+</body>
+
+</html>
